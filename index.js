@@ -1,22 +1,16 @@
-function canFinish(numCourses, prerequisites) {
-  const graph = new Array(numCourses).fill(0).map(() => []);
-  const inDegree = new Array(numCourses).fill(0);
-  for (const [course, pre] of prerequisites) {
-    graph[pre].push(course);
-    inDegree[course]++;
+const countingSort = (arr) => {
+  const min = Math.min(...arr);
+  const max = Math.max(...arr);
+  const count = Array(max - min + 1).fill(0);
+  for (let num of arr) {
+    count[num - min]++;
   }
-  const queue = [];
-  for (let i = 0; i < numCourses; i++) {
-    if (inDegree[i] === 0) queue.push(i);
-  }
-  let count = 0;
-  while (queue.length) {
-    const course = queue.shift();
-    count++;
-    for (const nextCourse of graph[course]) {
-      inDegree[nextCourse]--;
-      if (inDegree[nextCourse] === 0) queue.push(nextCourse);
+  let sortedIndex = 0;
+  for (let i = min; i <= max; i++) {
+    while (count[i - min] > 0) {
+      arr[sortedIndex++] = i;
+      count[i - min]--;
     }
   }
-  return count === numCourses;
-}
+  return arr;
+};
